@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI-Driven Company Structure Slides</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            overflow: hidden;
+        }
+        /* Define custom colors inspired by the logo */
+        :root {
+            --brand-bg: #0a0a0a;
+            --brand-text: #F2EADC;
+            --brand-blue: #61CFF1;
+            --brand-green: #3EBF81;
+            --brand-orange: #F3A261;
+            --brand-purple: #8A5E9A;
+        }
+
+        /* Animated Aurora Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(138, 94, 154, 0.2), transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(62, 191, 129, 0.2), transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(97, 207, 241, 0.15), transparent 50%);
+            animation: aurora 20s infinite alternate;
+        }
+
+        @keyframes aurora {
+            from {
+                transform: rotate(0deg) scale(1.2);
+            }
+            to {
+                transform: rotate(360deg) scale(1.5);
+            }
+        }
+
+        .slide {
+            display: none;
+            min-height: 600px;
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        /* Animation for slide content */
+        .slide .animated-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        .slide.active .animated-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--brand-blue), var(--brand-green), var(--brand-orange), var(--brand-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .highlight-blue { color: var(--brand-blue); }
+        .highlight-green { color: var(--brand-green); }
+        .highlight-orange { color: var(--brand-orange); }
+        .highlight-purple { color: var(--brand-purple); }
+        
+        .btn-nav {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .btn-nav:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px) scale(1.05);
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-blue), var(--brand-green));
+            transition: width 0.5s ease-in-out;
+        }
+        
+        /* Styles for the new Gemini feature */
+        .gemini-btn {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(90deg, var(--brand-purple), var(--brand-blue));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(138, 94, 154, 0.5);
+        }
+        .gemini-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 7px 25px rgba(138, 94, 154, 0.7);
+        }
+
+        /* Glassmorphism Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(20px);
+            color: var(--brand-text);
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+        
+        .card {
+             background: rgba(255, 255, 255, 0.03);
+             border: 1px solid rgba(255, 255, 255, 0.08);
+             transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="text-[--brand-text] flex flex-col items-center justify-center min-h-screen p-4">
+<div class="w-full max-w-5xl bg-black/50 rounded-2xl shadow-2xl shadow-purple-500/10 overflow-hidden border border-gray-800" id="presentation-container">
+<div class="relative" id="slides-wrapper">
+<!-- Logo Data URI -->
+<!-- The logo is embedded here to avoid broken links -->
+<img alt="Logo Source" class="hidden" id="logo-source" src="data:image/png;base64,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"/>
+<!-- Slide 1: Title -->
+<div class="slide active flex-col items-center justify-center text-center p-8 md:p-16" id="slide-1">
+<img alt="Tesslate Logo" class="w-32 h-32 md:w-48 md:h-48 mb-8 animated-item" data-img-src="logo" style="animation-delay: 0.1s;"/>
+<h1 class="text-4xl md:text-6xl font-extrabold gradient-text mb-4 animated-item" style="animation-delay: 0.2s;">The New Era of Company Structure</h1>
+<p class="text-xl md:text-2xl text-gray-400 animated-item" style="animation-delay: 0.3s;">How AI-Native Automation Enables Super-Lean Teams</p>
+
+</div>
+<!-- Slide 2: Acme AI Solutions -->
+<div class="slide flex-col justify-center p-8 md:p-12" id="slide-2">
+<h2 class="text-sm font-bold uppercase tracking-widest highlight-blue mb-2 animated-item" style="animation-delay: 0.1s;">Case Study: Acme AI Solutions</h2>
+<h1 class="text-3xl md:text-4xl font-bold mb-6 animated-item" style="animation-delay: 0.2s;">Building B2B SaaS with a 4-Person Core Team</h1>
+<div class="grid md:grid-cols-2 gap-8">
+<div class="animated-item" style="animation-delay: 0.3s;">
+<h3 class="font-bold text-xl mb-3 highlight-green">Core Human Team</h3>
+<ul class="space-y-3 text-gray-300">
+<li class="flex items-start"><span class="highlight-orange mr-3 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span> <strong>CEO:</strong> Vision, Strategy, Fundraising</li>
+<li class="flex items-start"><span class="highlight-orange mr-3 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2v2H9V5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span> <strong>CPO:</strong> Product Vision, GTM, Feedback</li>
+<li class="flex items-start"><span class="highlight-orange mr-3 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span> <strong>CFO:</strong> Finances, Compliance, Ops</li>
+<li class="flex items-start"><span class="highlight-orange mr-3 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span> <strong>CSO:</strong> Sales, Partnerships, Strategy</li>
+</ul>
+</div>
+<div class="animated-item" style="animation-delay: 0.4s;">
+<h3 class="font-bold text-xl mb-3 highlight-green">100% AI-Automated Functions</h3>
+<ul class="space-y-3 text-gray-300">
+<li class="flex items-start"><span class="highlight-purple mr-3 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span> <strong>Software Development:</strong> AI-generated code.</li>
+<li class="flex items-start"><span class="highlight-purple mr-3 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span> <strong>QA &amp; Testing:</strong> Codeless platforms, AI scenarios.</li>
+<li class="flex items-start"><span class="highlight-purple mr-3 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span> <strong>DevOps &amp; Infrastructure:</strong> Self-healing orchestration.</li>
+<li class="flex items-start"><span class="highlight-purple mr-3 mt-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></span> <strong>Support &amp; Docs:</strong> AI chatbots &amp; "living" docs.</li>
+</ul>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-gray-700/50 animated-item" style="animation-delay: 0.5s;">
+<h3 class="font-bold text-xl mb-3 highlight-green">Business Impact</h3>
+<p class="text-gray-300">Launch products in <strong class="text-white">days, not months</strong>, reduce headcount by <strong class="text-white">80%+</strong>, and free up human experts to focus on <strong class="text-white">high-level strategy.</strong></p>
+</div>
+<button class="gemini-btn animated-item" data-slide-id="2" style="animation-delay: 0.6s;">✨ Generate Notes</button>
+</div>
+<!-- Slide 3: What's Possible -->
+<div class="slide flex-col justify-center p-8 md:p-12" id="slide-3">
+<h2 class="text-sm font-bold uppercase tracking-widest highlight-blue mb-2 animated-item" style="animation-delay: 0.1s;">The Power of AI-Native</h2>
+<h1 class="text-3xl md:text-4xl font-bold mb-8 animated-item" style="animation-delay: 0.2s;">What's Possible With Full Automation</h1>
+<div class="grid md:grid-cols-2 gap-8">
+<div class="space-y-4">
+<div class="card p-4 rounded-lg animated-item" style="animation-delay: 0.3s;"><h4 class="font-bold highlight-orange">10x Faster Speed</h4><p class="text-gray-400 text-sm">Dramatically accelerate time-to-market for new features and products.</p></div>
+<div class="card p-4 rounded-lg animated-item" style="animation-delay: 0.4s;"><h4 class="font-bold highlight-orange">Enhanced Quality</h4><p class="text-gray-400 text-sm">Automated QA reduces defects and increases customer satisfaction.</p></div>
+<div class="card p-4 rounded-lg animated-item" style="animation-delay: 0.5s;"><h4 class="font-bold highlight-orange">Infinite Scalability</h4><p class="text-gray-400 text-sm">AI agents handle repetitive and complex engineering tasks 24/7.</p></div>
+<div class="card p-4 rounded-lg animated-item" style="animation-delay: 0.6s;"><h4 class="font-bold highlight-orange">Increased Resilience</h4><p class="text-gray-400 text-sm">Continuous monitoring and remediation without human intervention.</p></div>
+</div>
+<div class="card rounded-lg p-6 flex flex-col items-center justify-center animated-item" style="animation-delay: 0.7s;">
+<h3 class="font-bold text-xl mb-4 highlight-green text-center">The Lean Team Structure</h3>
+<div class="text-center space-y-2 mb-4">
+<div class="p-2 border border-blue-500 rounded-lg inline-block bg-blue-500/10">CEO</div>
+<div class="flex justify-center space-x-2">
+<div class="p-2 border border-blue-500 rounded-lg inline-block bg-blue-500/10">CPO</div>
+<div class="p-2 border border-blue-500 rounded-lg inline-block bg-blue-500/10">CFO</div>
+<div class="p-2 border border-blue-500 rounded-lg inline-block bg-blue-500/10">CSO</div>
+</div>
+</div>
+<svg class="w-8 h-8 text-gray-500 my-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<div class="text-center p-4 border-2 border-dashed border-purple-500/50 rounded-lg w-full mt-2">
+<h4 class="font-bold gradient-text">AI-Automated Agents</h4>
+<p class="text-gray-400 text-sm">Handle all technical and operational execution.</p>
+</div>
+</div>
+</div>
+<button class="gemini-btn animated-item" data-slide-id="3" style="animation-delay: 0.8s;">✨ Generate Notes</button>
+</div>
+<!-- Slide 4: Real World Examples -->
+<div class="slide flex-col justify-center p-8 md:p-12" id="slide-4">
+<h2 class="text-sm font-bold uppercase tracking-widest highlight-blue mb-2 animated-item" style="animation-delay: 0.1s;">Proven in the Real World</h2>
+<h1 class="text-3xl md:text-4xl font-bold mb-6 animated-item" style="animation-delay: 0.2s;">Lean Teams + Extreme Automation</h1>
+<div class="space-y-6">
+<div class="card p-6 rounded-lg animated-item" style="animation-delay: 0.3s;">
+<h3 class="font-bold text-2xl mb-2 highlight-orange">Tesla: An Established Example</h3>
+<p class="text-gray-300 mb-4">Applies lean principles and AI automation to achieve outsized impact compared to legacy auto peers.</p>
+<ul class="list-disc list-inside text-gray-400 space-y-2">
+<li><strong class="text-gray-200">Lean Structure:</strong> Cut unnecessary management layers and automated manufacturing, design, and support.</li>
+<li><strong class="text-gray-200">AI-Driven Ops:</strong> Robotics for production, data-driven QA, and over-the-air (OTA) software updates.</li>
+<li><strong class="text-gray-200">Agile Development:</strong> Small, autonomous teams with automated pipelines speed up time-to-market from years to weeks.</li>
+</ul>
+</div>
+<div class="animated-item" style="animation-delay: 0.4s;">
+<h3 class="font-bold text-xl mb-3 highlight-green">Other Notable Examples</h3>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="card p-4 rounded-lg animated-item" style="animation-delay: 0.5s;">
+<h4 class="font-bold highlight-purple">Airbnb (Early Stage)</h4>
+<p class="text-gray-400 text-sm">Focused on automating operations and leveraging rapid, data-driven experiment cycles.</p>
+</div>
+<div class="card p-4 rounded-lg animated-item" style="animation-delay: 0.6s;">
+<h4 class="font-bold highlight-purple">Dropbox (Early Stage)</h4>
+<p class="text-gray-400 text-sm">Hyper-efficient team using continuous deployment and automated testing to scale.</p>
+</div>
+</div>
+</div>
+</div>
+<button class="gemini-btn animated-item" data-slide-id="4" style="animation-delay: 0.7s;">✨ Generate Notes</button>
+</div>
+<!-- Slide 5: Conclusion -->
+<div class="slide flex-col items-center justify-center text-center p-8 md:p-16" id="slide-5">
+<img alt="Tesslate Logo" class="w-24 h-24 md:w-32 md:h-32 mb-8 opacity-50 animated-item" data-img-src="logo" style="animation-delay: 0.1s;"/>
+<h1 class="text-3xl md:text-5xl font-bold gradient-text mb-4 animated-item" style="animation-delay: 0.2s;">The Future is Lean &amp; Automated</h1>
+<p class="text-lg md:text-xl text-gray-400 max-w-3xl animated-item" style="animation-delay: 0.3s;">Combining a lean human core with advanced AI automation allows companies to achieve unprecedented scale, quality, and innovationmaking AI-native workflows a key competitive advantage.</p>
+<button class="gemini-btn animated-item" data-slide-id="5" style="animation-delay: 0.4s;">✨ Generate Notes</button>
+</div>
+</div>
+<!-- Navigation -->
+<div class="p-4 bg-black/50 border-t border-gray-800/50">
+<div class="flex items-center justify-between">
+<button class="btn-nav rounded-full p-3 text-white" id="prevBtn"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+<div class="text-sm text-gray-400" id="slide-counter">1 / 5</div>
+<button class="btn-nav rounded-full p-3 text-white" id="nextBtn"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
+</div>
+<div class="mt-3"><div class="progress-bar-container"><div class="progress-bar" id="progress-bar"></div></div></div>
+</div>
+</div>
+<!-- Gemini Modal -->
+<div class="modal-overlay" id="gemini-modal">
+<div class="modal-content">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-2xl font-bold gradient-text">✨ Speaker Notes</h2>
+<button class="text-gray-400 hover:text-white text-3xl" id="close-modal-btn">×</button>
+</div>
+<div class="space-y-4 text-gray-300" id="notes-content"></div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- EMBED LOGO ---
+            const logoSource = document.getElementById('logo-source');
+            const logoImages = document.querySelectorAll('img[data-img-src="logo"]');
+            if (logoSource && logoImages.length > 0) {
+                const logoSrcData = logoSource.getAttribute('src');
+                logoImages.forEach(img => img.setAttribute('src', logoSrcData));
+                logoSource.style.display = 'none'; // Hide the source element
+            }
+
+            // --- SLIDE NAVIGATION ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slide-counter');
+            const progressBar = document.getElementById('progress-bar');
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            function showSlide(index) {
+                if (index >= totalSlides) { currentSlide = totalSlides - 1; } 
+                else if (index < 0) { currentSlide = 0; } 
+                else { currentSlide = index; }
+
+                slides.forEach((slide, i) => {
+                    if (i === currentSlide) {
+                        slide.classList.add('active');
+                        // Trigger animations for items on the active slide
+                        const animatedItems = slide.querySelectorAll('.animated-item');
+                        animatedItems.forEach((item, itemIndex) => {
+                            const delay = parseFloat(item.style.animationDelay) || 0;
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                                item.style.transform = 'translateY(0)';
+                            }, delay * 1000);
+                        });
+                    } else {
+                        slide.classList.remove('active');
+                        // Reset animations for items on inactive slides
+                        const animatedItems = slide.querySelectorAll('.animated-item');
+                        animatedItems.forEach(item => {
+                            item.style.opacity = '0';
+                            item.style.transform = 'translateY(20px)';
+                        });
+                    }
+                });
+                updateUI();
+            }
+
+            function updateUI() {
+                slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+                const progressPercentage = ((currentSlide) / (totalSlides - 1)) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+                prevBtn.style.opacity = currentSlide === 0 ? '0.5' : '1';
+                nextBtn.style.opacity = currentSlide === totalSlides - 1 ? '0.5' : '1';
+                prevBtn.style.cursor = currentSlide === 0 ? 'not-allowed' : 'pointer';
+                nextBtn.style.cursor = currentSlide === totalSlides - 1 ? 'not-allowed' : 'pointer';
+            }
+
+            nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+            prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' && currentSlide < totalSlides - 1) showSlide(currentSlide + 1);
+                else if (e.key === 'ArrowLeft' && currentSlide > 0) showSlide(currentSlide - 1);
+            });
+            showSlide(0);
+
+            // --- GEMINI SPEAKER NOTES ---
+            const modal = document.getElementById('gemini-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const notesContent = document.getElementById('notes-content');
+            const geminiBtns = document.querySelectorAll('.gemini-btn');
+
+            const openModal = () => modal.classList.add('visible');
+            const closeModal = () => modal.classList.remove('visible');
+
+            const getSlideContent = (slideId) => {
+                const slideElement = document.getElementById(`slide-${slideId}`);
+                if (!slideElement) return "No content found.";
+                const clone = slideElement.cloneNode(true);
+                const button = clone.querySelector('.gemini-btn');
+                if (button) button.remove();
+                return clone.innerText || clone.textContent;
+            };
+            
+            const generateSpeakerNotes = async (slideId) => {
+                openModal();
+                notesContent.innerHTML = '<p>Generating notes with Gemini... ✨</p>';
+
+                const slideText = getSlideContent(slideId);
+                const prompt = `You are a world-class presentation coach. Based on the following slide content, generate concise and engaging speaker notes in markdown format. The notes should be easy to read and provide talking points for the presenter. Do not just repeat the text on the slide; expand on it. Use headings, bold text, and bullet points. \n\n---SLIDE CONTENT---\n${slideText}`;
+                
+                const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // API key is handled by the environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                        let text = result.candidates[0].content.parts[0].text;
+                        // Basic markdown to HTML conversion
+                        text = text.replace(/### (.*)/g, '<h3 class="text-lg font-bold highlight-green mt-4">$1</h3>');
+                        text = text.replace(/## (.*)/g, '<h2 class="text-xl font-bold highlight-blue mt-4">$1</h2>');
+                        text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>');
+                        text = text.replace(/\* (.*)/g, '<li class="ml-4 list-disc">$1</li>');
+                        text = text.replace(/\n/g, '<br>');
+                        notesContent.innerHTML = text;
+                    } else {
+                        throw new Error("Invalid response structure from API.");
+                    }
+                } catch (error) {
+                    console.error("Gemini API Error:", error);
+                    notesContent.innerHTML = `<p class="text-red-400">Sorry, an error occurred. Please try again. <br><br>Error: ${error.message}</p>`;
+                }
+            };
+
+            geminiBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const slideId = btn.dataset.slideId;
+                    generateSpeakerNotes(slideId);
+                });
+            });
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        });
+    </script>
+</body>
+</html>
